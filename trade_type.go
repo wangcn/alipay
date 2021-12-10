@@ -15,7 +15,7 @@ type Trade struct {
 	BusinessParams     string `json:"business_params,omitempty"`      // 商户传入业务信息，具体值要和支付宝约定，应用于安全，营销等参数直传场景，格式为json格式
 	DisablePayChannels string `json:"disable_pay_channels,omitempty"` // 禁用渠道，用户不可用指定渠道支付 当有多个渠道时用“,”分隔 注，与enable_pay_channels互斥
 	EnablePayChannels  string `json:"enable_pay_channels,omitempty"`  // 可用渠道，用户只能在指定渠道范围内支付  当有多个渠道时用“,”分隔 注，与disable_pay_channels互斥
-	//ExtUserInfo        string `json:"ext_user_info,omitempty"`        // 外部指定买家
+	// ExtUserInfo        string `json:"ext_user_info,omitempty"`        // 外部指定买家
 	ExtendParams     map[string]interface{} `json:"extend_params,omitempty"`     // 业务扩展参数，详见下面的“业务扩展参数说明”
 	GoodsType        string                 `json:"goods_type,omitempty"`        // 商品主类型：0—虚拟类商品，1—实物类商品 注：虚拟类商品不支持使用花呗渠道
 	InvoiceInfo      string                 `json:"invoice_info,omitempty"`      // 开票信息
@@ -67,10 +67,10 @@ func (this TradePagePay) Params() map[string]string {
 type TradeStatus string
 
 const (
-	TradeStatusWaitBuyerPay TradeStatus = "WAIT_BUYER_PAY" //（交易创建，等待买家付款）
-	TradeStatusClosed       TradeStatus = "TRADE_CLOSED"   //（未付款交易超时关闭，或支付完成后全额退款）
-	TradeStatusSuccess      TradeStatus = "TRADE_SUCCESS"  //（交易支付成功）
-	TradeStatusFinished     TradeStatus = "TRADE_FINISHED" //（交易结束，不可退款）
+	TradeStatusWaitBuyerPay TradeStatus = "WAIT_BUYER_PAY" // （交易创建，等待买家付款）
+	TradeStatusClosed       TradeStatus = "TRADE_CLOSED"   // （未付款交易超时关闭，或支付完成后全额退款）
+	TradeStatusSuccess      TradeStatus = "TRADE_SUCCESS"  // （交易支付成功）
+	TradeStatusFinished     TradeStatus = "TRADE_FINISHED" // （交易结束，不可退款）
 )
 
 // TradeQuery 统一收单线下交易查询接口请求参数 https://docs.open.alipay.com/api_1/alipay.trade.query/
@@ -307,6 +307,8 @@ type TradeFastPayRefundQueryRsp struct {
 		RefundReason         string              `json:"refund_reason"`                     // 发起退款时，传入的退款原因
 		TotalAmount          string              `json:"total_amount"`                      // 发该笔退款所对应的交易的订单金额
 		RefundAmount         string              `json:"refund_amount"`                     // 本次退款请求，对应的退款金额
+		RefundStatus         string              `json:"refund_status"`                     // 退款状态。枚举值：REFUND_SUCCESS 退款处理成功
+		GmtRefundPay         string              `json:"gmt_refund_pay"`                    // 退款时间
 		RefundDetailItemList []*RefundDetailItem `json:"refund_detail_item_list,omitempty"` // 本次退款使用的资金渠道；
 	} `json:"alipay_trade_fastpay_refund_query_response"`
 	Sign string `json:"sign"`
@@ -325,7 +327,7 @@ type TradeOrderSettle struct {
 	OutRequestNo      string              `json:"out_request_no"`     // 必须 结算请求流水号 开发者自行生成并保证唯一性
 	TradeNo           string              `json:"trade_no"`           // 必须 支付宝订单号
 	RoyaltyParameters []*RoyaltyParameter `json:"royalty_parameters"` // 必须 分账明细信息
-	OperatorId        string              `json:"operator_id"`        //可选 操作员id
+	OperatorId        string              `json:"operator_id"`        // 可选 操作员id
 }
 
 func (this TradeOrderSettle) APIName() string {
